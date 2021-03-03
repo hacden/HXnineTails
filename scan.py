@@ -8,6 +8,8 @@ import base
 from ServerJiang.jiangMain import SendNotice
 import click
 import os
+from Xray.startXray import start_xray
+import threading
 
 '''
 扫描控制主函数
@@ -83,6 +85,7 @@ def init(attone,attsrc,attdetail,thread,readppp,clean,plugins):
             os.makedirs(config.Xray_temp_report_path)
             os.makedirs(config.CScan_report_path)
             os.makedirs(config.Sub_report_path)
+            os.makedirs(config.Url_report_path)
             os.makedirs(config.Temp_path)
             os.makedirs(config.JS_report_path)
     except Exception as e:
@@ -169,16 +172,21 @@ def foxScan(target):
     print("Start attsrc foxScan {}\nfilename : {}\n".format(target, filename))
     base.subScan(target, filename)
     # 进行子域名搜集
+    t = threading.Thread(target=start_xray,args=(filename,))
+    t.setDaemon(True)
+    t.start()
     while not config.target_queue.empty():
         current_target = config.target_queue.get()
         if base.checkBlackList(current_target):
             # 对搜集到的目标挨个进行扫描
-            req_pool = crawlergoMain.crawlergoGet(current_target)
-            req_pool.add(current_target)
-            tempFilename=hashlib.md5(current_target.encode("utf-8")).hexdigest()
-            # 对目标网址使用 crawlergoGet 页面URL动态爬取，保存在 req_pool 集合里
-            threadPoolScan(req_pool, tempFilename, target)
+            res = crawlergoMain.crawlergoGet(current_target)
+            if res:
+                print("{} craw end".format(current_target))
+            else:
+                print("{} craw false".format(current_target))
     print("InPuT T4rGet {} Sc3n EnD#".format(target))
+    SendNotice("{} 花溪九尾扫描完毕".format(target))
+    t.join()
     return
 
 

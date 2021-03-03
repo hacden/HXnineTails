@@ -208,13 +208,29 @@ urlCheck(url) 函数
 '''
 def urlCheck(target):
     try:
-        print("now url live check: {}".format(target))
-        rep = requests.get(target, headers=config.GetHeaders(), timeout=2, verify=False)
-        if rep.status_code != 404:
-            return True
+        url = addHttpHeader(target)
+        print("now url live check: {}".format(url))
+        res = requests.get(url, headers=config.GetHeaders(), timeout=5, verify=False)
+        if res.status_code == 400 or str(res.status_code)[0]==5:
+            url = "http://"+url.split("//")[1]
+            r = requests.get(url, headers=config.GetHeaders(), timeout=5, verify=False)
+            if r.status_code == 400 or str(r.status_code)[0] == 5:
+                return False
+        else:
+            return url
     except Exception as e:
         # print(e)
-        return False
+        try:
+            url = addHttpHeader(target)
+            url = "http://" + url.split("//")[1]
+            r = requests.get(url, headers=config.GetHeaders(), timeout=5, verify=False)
+            if r.status_code == 400 or str(r.status_code)[0] == 5:
+                return False
+            else:
+                return url
+        except Exception as e:
+            return False
+
     return False
 
 '''
@@ -228,19 +244,29 @@ queueDeduplication(filename) 队列去重函数
 '''
 def queueDeduplication(filename):
     Sub_report_path =config.Sub_report_path +filename +".txt"
+    Url_report_path =config.Url_report_path +filename +".txt"
     sub_set =set()
+    url_set =set()
     while not config.sub_queue.empty():
         target =config.sub_queue.get()
-        target=addHttpHeader(target)
         sub_set.add(target)
+        target = urlCheck(target)
+        if target:
+            url_set.add(target)
     length=len(sub_set)
+
     with open(Sub_report_path, 'a+') as f:
         while len(sub_set) != 0:
             target = sub_set.pop()
-            if urlCheck(target):
-                config.target_queue.put(target)
-                print("now save :{}".format(target))
-                f.write("{}\n".format(target))
+            f.write("{}\n".format(target))
+
+
+    with open(Url_report_path, 'a+') as f:
+        while len(url_set) != 0:
+            target = url_set.pop()
+            config.target_queue.put(target)
+            print("now save :{}".format(target))
+            f.write("{}\n".format(target))
     print("queueDeduplication End~")
     SendNotice("子域名搜集完毕，数量:{}，保存文件名:{}".format(length,filename))
     return

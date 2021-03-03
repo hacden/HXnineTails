@@ -22,13 +22,13 @@ SERVERKEY=''
     OneForAll 文件夹所在的位置 例如：C:\\Users\\Cl0udG0d\\Desktop\\OneForAll-master\\
     subDomainsBrute 文件夹所在位置 
 '''
-Chrome_Path='C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe'
+Chrome_Path='D:\\web-tools\\info\\spider\\chrome-win\\chrome.exe'
 
-Xray_Path='C:\\Users\\Administrator\\Desktop\\cnvdScan\\xray.exe'
-crawlergo_Path='C:\\Users\\Administrator\\Desktop\\test_tools\\crawlergo.exe'
-OneForAll_Path='C:\\Users\\Administrator\\Desktop\\test_tools\\OneForAll-master\\'
-subDomainsBrute_Path='C:\\Users\\Administrator\\Desktop\\test_tools\\subDomainsBrute-master\\'
-subfinder_Path='C:\\Users\\Administrator\\Desktop\\test_tools\\subfinder\\'
+Xray_Path='D:\\web-tools\\vul\\xray\\xray.exe'
+crawlergo_Path='D:\\web-tools\\info\\spider\\crawlergo.exe'
+OneForAll_Path='D:\\web-tools\\info\\OneForAll'
+subDomainsBrute_Path='D:\\web-tools\\info\\subDomainsBrute\\'
+subfinder_Path='D:\\web-tools\\info\\'
 
 # Xray_Path='C:\\Users\\Cl0udG0d\\Desktop\\Xray\\xray.exe'
 # crawlergo_Path='C:\\Users\\Cl0udG0d\\Desktop\\sec_tools\\crawlergo\\crawlergo.exe'
@@ -48,6 +48,7 @@ Xray_report_path="{}\\save\\saveXray".format(Root_Path)
 Xray_temp_report_path='{}\\save\\saveTempXray'.format(Root_Path)
 CScan_report_path="{}\\save\\saveCplus\\".format(Root_Path)
 Sub_report_path="{}\\save\\saveSub\\".format(Root_Path)
+Url_report_path="{}\\save\\saveUrl\\".format(Root_Path)
 Temp_path="{}\\save\\temp\\".format(Root_Path)
 JS_report_path='{}\\save\\saveJS\\'.format(Root_Path)
 
@@ -59,8 +60,8 @@ JS_report_path='{}\\save\\saveJS\\'.format(Root_Path)
 portlist=['80','8080','8000','8081','8001']
 blacklist=["spider","org"]
 
-ThreadNum=5
-PYTHON="python3"
+ThreadNum=15
+PYTHON="python"
 # xray扫描插件,默认使用所有插件 plugins
 plugins=''
 

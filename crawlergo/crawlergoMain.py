@@ -6,9 +6,10 @@ from fake_useragent import UserAgent
 ua = UserAgent()
 
 
-# def GetHeaders():
-#     headers = {'User-Agent': ua.random}
-#     return headers
+def get_random_headers():
+	headers = {'User-Agent': ua.random}
+
+	return headers
 
 '''
     使用集合去除重复的URL
@@ -32,8 +33,7 @@ def removeDuplicates(req_list):
 def crawlergoGet(target):
     print("Now crawlergoGet : {}".format(target))
     try:
-        cmd = [config.crawlergo_Path, "-c", config.Chrome_Path, "--custom-headers", json.dumps(config.GetHeaders()), "-t", "10", "-f",
-               "smart", "-o", "json", target]
+        cmd = [config.crawlergo_Path, "-c", config.Chrome_Path, "-t", "10","-f","smart","--fuzz-path","--custom-headers",json.dumps(get_random_headers()), "--push-to-proxy", "http://127.0.0.1:7777/", "--push-pool-max", "10","--output-mode", "json" , target]
         rsp = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         output, error = rsp.communicate()
         #  "--[Mission Complete]--"  是任务结束的分隔字符串
@@ -43,10 +43,10 @@ def crawlergoGet(target):
     except Exception as e:
         print(e)
         req_list=[]
-        pass
+        return False
     print("target {} crawlergo end~".format(target))
     print("crawlergo get url number {}".format(len(req_list)))
-    return removeDuplicates(req_list)
+    return True
 
 def main():
     return
