@@ -141,14 +141,9 @@ oneFoxScan(target)函数
 
 
 def oneFoxScan(target):
-    if base.checkBlackList(target):
-        target = base.addHttpHeader(target)
-        filename = hashlib.md5(target.encode("utf-8")).hexdigest()
-        print("Start foxScan {}\nfilename : {}\n".format(target, filename))
-        req_pool = crawlergoMain.crawlergoGet(target)
-        # 对目标网址使用 crawlergoGet 页面URL动态爬取，保存在 req_pool 集合里
-        req_pool.add(target)
-        threadPoolScan(req_pool, filename, target)
+    filename = hashlib.md5(target.encode("utf-8")).hexdigest()
+    print("Start attsrc infoScan {}\nfilename : {}\n".format(target, filename))
+    base.subScan(target, filename)
     print("InPuT T4rGet {} Sc3n EnD#".format(target))
     return
 
