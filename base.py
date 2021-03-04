@@ -249,6 +249,8 @@ def queueDeduplication(filename):
     url_set =set()
     while not config.sub_queue.empty():
         target =config.sub_queue.get()
+        if "http" in target:
+            target = target.split("//")[1]
         sub_set.add(target)
         target = urlCheck(target)
         if target:
