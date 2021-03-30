@@ -210,11 +210,11 @@ def urlCheck(target):
     try:
         url = addHttpHeader(target)
         print("now url live check: {}".format(url))
-        res = requests.get(url, headers=config.GetHeaders(), timeout=5, verify=False)
-        if res.status_code == 400 or str(res.status_code)[0]==5:
-            url = "http://"+url.split("//")[1]
-            r = requests.get(url, headers=config.GetHeaders(), timeout=5, verify=False)
-            if r.status_code == 400 or str(r.status_code)[0] == 5:
+        res = requests.get(url, headers=config.GetHeaders(), timeout=3, verify=False)
+        if res.status_code == 400 or str(res.status_code)[0]=='5':
+            url = "https://"+url.split("//")[1]
+            r = requests.get(url, headers=config.GetHeaders(), timeout=3, verify=False)
+            if r.status_code == 400 or str(r.status_code)[0] == '5':
                 return False
         else:
             return url
@@ -222,9 +222,9 @@ def urlCheck(target):
         # print(e)
         try:
             url = addHttpHeader(target)
-            url = "http://" + url.split("//")[1]
-            r = requests.get(url, headers=config.GetHeaders(), timeout=5, verify=False)
-            if r.status_code == 400 or str(r.status_code)[0] == 5:
+            url = "https://" + url.split("//")[1]
+            r = requests.get(url, headers=config.GetHeaders(), timeout=3, verify=False)
+            if r.status_code == 400 or str(r.status_code)[0] == '5':
                 return False
             else:
                 return url
@@ -252,15 +252,16 @@ def queueDeduplication(filename):
         if "http" in target:
             target = target.split("//")[1]
         sub_set.add(target)
-        target = urlCheck(target)
-        if target:
-            url_set.add(target)
+
     length=len(sub_set)
 
     with open(Sub_report_path, 'a+') as f:
         while len(sub_set) != 0:
             target = sub_set.pop()
             f.write("{}\n".format(target))
+            target = urlCheck(target)
+            if target:
+                url_set.add(target)
 
 
     with open(Url_report_path, 'a+') as f:
@@ -276,7 +277,7 @@ def queueDeduplication(filename):
 def addHttpHeader(target):
     pattern = re.compile(r'^http')
     if not pattern.match(target.strip()):
-        target = "https://" + target.strip()
+        target = "http://" + target.strip()
     else:
         target = target.strip()
     return target
