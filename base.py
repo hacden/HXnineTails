@@ -246,22 +246,28 @@ def queueDeduplication(filename):
     Sub_report_path =config.Sub_report_path +filename +".txt"
     Url_report_path =config.Url_report_path +filename +".txt"
     sub_set =set()
+    sub_set_same = set()
     url_set =set()
     while not config.sub_queue.empty():
         target =config.sub_queue.get()
         if "http" in target:
             target = target.split("//")[1]
         sub_set.add(target)
-
+        sub_set_same.add(target)
+    
     length=len(sub_set)
 
     with open(Sub_report_path, 'a+') as f:
         while len(sub_set) != 0:
             target = sub_set.pop()
             f.write("{}\n".format(target))
-            target = urlCheck(target)
-            if target:
-                url_set.add(target)
+    
+    
+    while len(sub_set) != 0:
+        target = sub_set_same.pop()
+        target = urlCheck(target)
+        if target:
+            url_set.add(target)
 
 
     with open(Url_report_path, 'a+') as f:
