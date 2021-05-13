@@ -14,7 +14,7 @@ subDomainsBruteScan(target) 函数
 def subDomainsBruteScan(target,filename):
     subDomainsBrute_py='{}subDomainsBrute.py'.format(config.subDomainsBrute_Path)
     saveFilePath='{}{}.txt'.format(config.Temp_path,filename)
-    scanCommand="{} {} -t 10 -f subnames_full.txt --output {} {}".format(config.PYTHON,subDomainsBrute_py,saveFilePath,target)
+    scanCommand="{} {} -t 10 -f subnames.txt --output {} {}".format(config.PYTHON,subDomainsBrute_py,saveFilePath,target)
     print(scanCommand)
     os.system(scanCommand)
     if os.path.exists(saveFilePath):

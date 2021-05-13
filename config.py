@@ -49,6 +49,7 @@ Xray_temp_report_path='{}\\save\\saveTempXray'.format(Root_Path)
 CScan_report_path="{}\\save\\saveCplus\\".format(Root_Path)
 Sub_report_path="{}\\save\\saveSub\\".format(Root_Path)
 Url_report_path="{}\\save\\saveUrl\\".format(Root_Path)
+Title_report_path="{}\\save\\saveUrl\\".format(Root_Path)
 Temp_path="{}\\save\\temp\\".format(Root_Path)
 JS_report_path='{}\\save\\saveJS\\'.format(Root_Path)
 

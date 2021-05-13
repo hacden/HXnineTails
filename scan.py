@@ -10,6 +10,7 @@ import click
 import os
 from Xray.startXray import start_xray
 import threading
+import time
 
 '''
 扫描控制主函数
@@ -141,7 +142,7 @@ oneFoxScan(target)函数
 
 
 def oneFoxScan(target):
-    filename = hashlib.md5(target.encode("utf-8")).hexdigest()
+    filename = time.strftime("%Y%m%d%H%M", time.localtime())+'_'+target
     print("Start attsrc infoScan {}\nfilename : {}\n".format(target, filename))
     base.subScan(target, filename)
     print("InPuT T4rGet {} Sc3n EnD#".format(target))
@@ -163,13 +164,16 @@ foxScan(target) 函数
 
 
 def foxScan(target):
-    filename = hashlib.md5(target.encode("utf-8")).hexdigest()
+    filename = time.strftime("%Y%m%d%H%M", time.localtime())+'_'+target
     print("Start attsrc foxScan {}\nfilename : {}\n".format(target, filename))
-    base.subScan(target, filename)
-    # 进行子域名搜集
     t = threading.Thread(target=start_xray,args=(filename,))
     t.setDaemon(True)
     t.start()
+    base.subScan(target, filename)
+    # 进行子域名搜集
+    # t = threading.Thread(target=start_xray,args=(filename,))
+    # t.setDaemon(True)
+    # t.start()
     while not config.target_queue.empty():
         current_target = config.target_queue.get()
         if base.checkBlackList(current_target):

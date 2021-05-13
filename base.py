@@ -12,6 +12,7 @@ import config
 from ServerJiang.jiangMain import SendNotice
 import os
 import hashlib
+import urlscanner
 
 
 '''
@@ -194,7 +195,7 @@ def subScan(target ,filename):
     try:
         queueDeduplication(filename)
     except Exception as e:
-        print(e)
+        print(str(e))
         pass
 
 '''
@@ -262,20 +263,27 @@ def queueDeduplication(filename):
             target = sub_set.pop()
             f.write("{}\n".format(target))
     
+    urlscanner.start(list(sub_set_same),Url_report_path)
     
-    while len(sub_set_same) != 0:
-        target = sub_set_same.pop()
-        target = urlCheck(target)
-        if target:
-            url_set.add(target)
+    f = open(Url_report_path, 'r')
+    for line in f.readlines():
+        line = line.strip('\n')
+        config.target_queue.put(line)
+
+        
+    # while len(sub_set_same) != 0:
+        # target = sub_set_same.pop()
+        # target = urlCheck(target)
+        # if target:
+            # url_set.add(target)
 
 
-    with open(Url_report_path, 'a+') as f:
-        while len(url_set) != 0:
-            target = url_set.pop()
-            config.target_queue.put(target)
-            print("now save :{}".format(target))
-            f.write("{}\n".format(target))
+    # with open(Url_report_path, 'a+') as f:
+        # while len(url_set) != 0:
+            # target = url_set.pop()
+            # config.target_queue.put(target)
+            # print("now save :{}".format(target))
+            # f.write("{}\n".format(target))
     print("queueDeduplication End~")
     SendNotice("子域名搜集完毕，数量:{}，保存文件名:{}".format(length,filename))
     return
