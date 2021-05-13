@@ -263,7 +263,7 @@ def queueDeduplication(filename):
             f.write("{}\n".format(target))
     
     
-    while len(sub_set) != 0:
+    while len(sub_set_same) != 0:
         target = sub_set_same.pop()
         target = urlCheck(target)
         if target:
