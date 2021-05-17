@@ -13,6 +13,7 @@ bad_dns_servers.txt
 errors.log
 config.yaml
 debug.log
+src.txt
 # Distribution / packaging
 .Python
 migrations/

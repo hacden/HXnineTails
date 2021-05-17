@@ -202,32 +202,38 @@ foxScanDetail(target)
 '''
 
 
-def foxScanDetail(target):
-    thread = ThreadPoolExecutor(config.ThreadNum)
-    filename = hashlib.md5(target.encode("utf-8")).hexdigest()
-    print("Start attsrc foxScan {}\nfilename : {}\n".format(target, filename))
-    base.subScan(target, filename)
-    # 进行子域名搜集
-    while not config.target_queue.empty():
-        current_target = config.target_queue.get()
-        # 对搜集到的目标挨个进行扫描
-        if base.checkBlackList(current_target):
-            req_pool = crawlergoMain.crawlergoGet(current_target)
-            req_pool.add(current_target)
-            i = 0
-            all_task = []
-            while len(req_pool) != 0:
-                # 将 req_pool 里的URL依次弹出并扫描
-                temp_url = req_pool.pop()
-                current_filename = hashlib.md5(temp_url.encode("utf-8")).hexdigest()
-                i += 1
-                one_t = thread.submit(threadPoolDetailScan, temp_url, current_filename)
-                all_task.append(one_t)
-                if i == 5 or len(req_pool) == 0:
-                    i = 0
-                    wait(all_task, return_when=ALL_COMPLETED)
-                    all_task = []
+def foxScanDetail(file):
+    xray_filename = time.strftime("%Y%m%d%H%M", time.localtime())
+    print("Start read in file foxScan {}\nfilename : {}\n".format(file, xray_filename))
+    t = threading.Thread(target=start_xray,args=(xray_filename,))
+    t.setDaemon(True)
+    t.start()
+    targets = []
+    with open(file, 'r') as f:
+        lines = f.readlines()
+        for line in lines:
+            target = line.strip()
+            targets.append(target)
+    for target in targets:
+        filename = time.strftime("%Y%m%d%H%M", time.localtime())+'_'+target
+        base.subScan(target, filename)
+        Url_report_path =config.Url_report_path +filename +".txt"
+        current_targets = []
+        with open(Url_report_path, 'r') as f:
+            for current_target in f.readlines():
+                current_target = current_target.strip('\n')
+                current_targets.append(current_target)
+        for current_target in current_targets:            
+            if base.checkBlackList(current_target):
+                # 对搜集到的目标挨个进行扫描
+                res = crawlergoMain.crawlergoGet(current_target)
+                if res:
+                    print("{} craw end".format(current_target))
+                else:
+                    print("{} craw false".format(current_target))
     print("InPuT T4rGet {} Sc3n EnD#".format(target))
+    SendNotice("{} 花溪九尾扫描完毕".format(target))
+    t.join()
     return
 
 
