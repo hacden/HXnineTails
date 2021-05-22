@@ -694,20 +694,20 @@ class Virustotal(enumratorBaseThreaded):
 
         return self.get_response(resp)
 
-    # once the send_req is rewritten we don't need to call this function, the stock one should be ok
-    def enumerate(self):
-        while self.url != '':
-            resp = self.send_req(self.url)
-            resp = json.loads(resp)
-            if 'error' in resp:
-                self.print_(R + "[!] Error: Virustotal probably now is blocking our requests" + W)
-                break
-            if 'links' in resp and 'next' in resp['links']:
-                self.url = resp['links']['next']
-            else:
-                self.url = ''
-            self.extract_domains(resp)
-        return self.subdomains
+    # # once the send_req is rewritten we don't need to call this function, the stock one should be ok
+    # def enumerate(self):
+        # while self.url != '':
+            # resp = self.send_req(self.url)
+            # resp = json.loads(resp)
+            # if 'error' in resp:
+                # self.print_(R + "[!] Error: Virustotal probably now is blocking our requests" + W)
+                # break
+            # if 'links' in resp and 'next' in resp['links']:
+                # self.url = resp['links']['next']
+            # else:
+                # self.url = ''
+            # self.extract_domains(resp)
+        # return self.subdomains
 
     def extract_domains(self, resp):
         #resp is already parsed as json
@@ -920,7 +920,7 @@ def main(domain, threads, savefile, ports, silent, verbose, enable_bruteforce, e
                          'ask': AskEnum,
                          'netcraft': NetcraftEnum,
                          'dnsdumpster': DNSdumpster,
-                         'virustotal': Virustotal,
+                         #'virustotal': Virustotal,
                          'threatcrowd': ThreatCrowd,
                          'ssl': CrtSearch,
                          'passivedns': PassiveDNS
@@ -931,7 +931,7 @@ def main(domain, threads, savefile, ports, silent, verbose, enable_bruteforce, e
     if engines is None:
         chosenEnums = [
             BaiduEnum, YahooEnum, GoogleEnum, BingEnum, AskEnum,
-            NetcraftEnum, DNSdumpster, Virustotal, ThreatCrowd,
+            NetcraftEnum, DNSdumpster, ThreatCrowd,        # NetcraftEnum, DNSdumpster, Virustotal, ThreatCrowd,
             CrtSearch, PassiveDNS
         ]
     else:

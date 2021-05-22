@@ -101,7 +101,9 @@ def logo():
 import shutil,os
 
 def delModel():
-    saveFolderList=['saveCplus','saveJS','saveSub','saveXray']
+    shutil.rmtree("{}\\tmp".format(Root_Path))
+    os.mkdir("{}\\tmp".format(Root_Path))
+    saveFolderList=['saveCplus','saveJS','saveSub','saveTempXray','saveUrl','temp']
     for tempFolder in saveFolderList:
         shutil.rmtree("{}\\save\\{}".format(Root_Path,tempFolder))
         os.mkdir("{}\\save\\{}".format(Root_Path,tempFolder))

@@ -253,6 +253,8 @@ def queueDeduplication(filename):
         target =config.sub_queue.get()
         if "http" in target:
             target = target.split("//")[1]
+        if "000." in target:
+            continue
         sub_set.add(target)
         sub_set_same.add(target)
     

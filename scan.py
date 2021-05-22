@@ -219,18 +219,22 @@ def foxScanDetail(file):
         base.subScan(target, filename)
         Url_report_path =config.Url_report_path +filename +".txt"
         current_targets = []
-        with open(Url_report_path, 'r') as f:
-            for current_target in f.readlines():
-                current_target = current_target.strip('\n')
-                current_targets.append(current_target)
-        for current_target in current_targets:            
-            if base.checkBlackList(current_target):
-                # 对搜集到的目标挨个进行扫描
-                res = crawlergoMain.crawlergoGet(current_target)
-                if res:
-                    print("{} craw end".format(current_target))
-                else:
-                    print("{} craw false".format(current_target))
+        try:
+            with open(Url_report_path, 'r') as f:
+                for current_target in f.readlines():
+                    current_target = current_target.strip('\n')
+                    current_targets.append(current_target)
+            for current_target in current_targets:            
+                if base.checkBlackList(current_target):
+                    # 对搜集到的目标挨个进行扫描
+                    res = crawlergoMain.crawlergoGet(current_target)
+                    if res:
+                        print("{} craw end".format(current_target))
+                    else:
+                        print("{} craw false".format(current_target))
+        except Exception as e:
+            print(str(e))
+            pass
     print("InPuT T4rGet {} Sc3n EnD#".format(target))
     SendNotice("{} 花溪九尾扫描完毕".format(target))
     t.join()
